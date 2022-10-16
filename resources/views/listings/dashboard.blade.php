@@ -12,15 +12,15 @@
         }
 
         /*
-     * Sidebar
-     */
+                 * Sidebar
+                 */
 
         .sidebar {
             position: fixed;
             top: 0;
             /* rtl:raw:
-      right: 0;
-      */
+                  right: 0;
+                  */
             bottom: 0;
             /* rtl:remove */
             left: 0;
@@ -72,8 +72,8 @@
         }
 
         /*
-     * Navbar
-     */
+                 * Navbar
+                 */
 
         .navbar-brand {
             padding-top: .75rem;
@@ -106,14 +106,17 @@
         }
     </style>
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Company name</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">Back to Home Site</a>
         <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
             data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="navbar-nav">
             <div class="nav-item text-nowrap">
-                <a class="nav-link px-3" href="#">Sign out</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn btn-dark" type="submit">Sign out</button>
+                </form>
             </div>
         </div>
     </header>
@@ -154,26 +157,37 @@
                     </div>
                 </div>
 
-                <h2>Section title</h2>
+                <h2>My Gigs</h2>
                 <div class="table-responsive">
                     <table class="table table-striped table-sm">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Header</th>
-                                <th scope="col">Header</th>
-                                <th scope="col">Header</th>
-                                <th scope="col">Header</th>
+                                <th scope="col">logo</th>
+                                <th scope="col">Company</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1,001</td>
-                                <td>random</td>
-                                <td>data</td>
-                                <td>placeholder</td>
-                                <td>text</td>
-                            </tr>
+                            @foreach ($listings as $listing)
+                                <tr>
+                                    <td><img src="{{ $listing->logo ? asset('storage/' . $listing->logo) : asset('theme/assets/img/companies/1.jpg') }}"
+                                            width="50"></td>
+                                    <td class="pt-3">{{ $listing->company }}</td>
+                                    <td class="pt-3">{{ $listing->title }}</td>
+                                    <td class="pt-3">{{ $listing->location }}</td>
+                                    <td class="pt-2">
+                                        <a target="_blank" href="/listing/{{ $listing->id }}/edit" class="btn btn-warning"
+                                            type="button">Edit</a>
+                                        <form class="d-inline-block" method="POST" action="/listing/{{ $listing->id }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

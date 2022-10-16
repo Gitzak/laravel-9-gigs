@@ -142,13 +142,13 @@ class ListingController extends Controller
         }
 
         $listing->delete();
-        return redirect('/')->with('message', 'Listing deleted successfully');
+        return back()->with('message', 'Listing deleted successfully');
     }
 
     public function dashboard()
     {
         return view('listings.dashboard', [
-            'listings' => Listing::latest()->filter(request(['tag', 'search']))->paginate(6)
+            'listings' => Listing::where('user_id', Auth::user()->id)->get()
         ]);
     }
 }
